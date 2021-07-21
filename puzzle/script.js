@@ -151,7 +151,7 @@ function puzzleContainer(puzzleSize) {
 				li.appendChild(document.createTextNode((8 + i).toString()));
 				ul.appendChild(li);
 			}
-		} else if (matrixVolume < document.getElementsByTagName('li').length + 1) {
+		} else {
 			let list = document.querySelector('ul');
 			list.innerHTML = '';
 			for (var i = 1; i < matrixVolume; i++) {
