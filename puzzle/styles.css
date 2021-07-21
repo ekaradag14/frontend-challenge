@@ -1,0 +1,28 @@
+.puzzle-figure {
+	position: relative;
+	left: 5vw;
+	top: 6vw;
+}
+ul {
+	display: none;
+	padding: 0px;
+	background: black;
+	justify-content: space-evenly;
+	border: 0.5vw solid black;
+	flex-wrap: wrap;
+	border-radius: 0.5vw;
+	list-style-type: none;
+	list-style: none;
+}
+
+li {
+	position: absolute;
+	width: 5vw;
+	height: 5vw;
+	border: 0.5vw inset gray;
+	background: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.5em;
+}
