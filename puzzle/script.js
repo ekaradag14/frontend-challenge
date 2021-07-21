@@ -1,16 +1,20 @@
 Array.prototype.random = function () {
 	return this[Math.floor(Math.random() * this.length)];
 };
-function puzzleContainer(xAxis, yAxis) {
+function puzzleContainer(puzzleSize) {
+	if (typeof puzzleSize !== 'number') {
+		console.log('Size is required as a number.');
+		return;
+	}
 	const emptyString = 'empty';
 	let puzzleState = [];
 	let lastState = [];
 	//Create the initial matrix for dimensions
-	for (var i = 1; i < xAxis * yAxis; i++) {
+	for (var i = 1; i < Math.pow(puzzleSize, 2); i++) {
 		puzzleState.push(i);
 	}
-	for (var i = 0; i < yAxis; i++) {
-		lastState.push(puzzleState.slice(i * xAxis, (i + 1) * xAxis));
+	for (var i = 0; i < puzzleSize; i++) {
+		lastState.push(puzzleState.slice(i * puzzleSize, (i + 1) * puzzleSize));
 	}
 	lastState[lastState.length - 1].push('empty');
 
@@ -40,11 +44,9 @@ function puzzleContainer(xAxis, yAxis) {
 			puzzleState[0].length * 5 + puzzleState[0].length
 		}vw`;
 		element.style.height = `${puzzleState.length * 5 + puzzleState.length}vw`;
-
-		//Define li class
 	};
 	const shufflePuzzle = () => {
-		//Find used numbers from the puzzleState
+		//Find used numbers from the puzzleState and sort them
 		let numbers = puzzleState.flat();
 		numbers.splice(numbers.indexOf('empty'), 1);
 		numbers = numbers.sort((a, b) => a - b);
@@ -73,7 +75,7 @@ function puzzleContainer(xAxis, yAxis) {
 				(i + 1) * rowVolume
 			);
 		}
-		//Update the app state with the shuffled puzzle
+		//Return the shuffled puzzle
 		return shuffledPuzzleState;
 	};
 
@@ -81,6 +83,7 @@ function puzzleContainer(xAxis, yAxis) {
 		let liElements = document.getElementsByTagName('li');
 		//Create a checkpoint to control is the empty element passed. So we do not have any array boundary problems
 		let isPassedEmpty = false;
+		//Add required css class for every element in matrix
 		currentPuzzleState.forEach((row, rowNo) => {
 			row.forEach((element, columnNo) => {
 				if (element === emptyString) {
@@ -139,18 +142,22 @@ function puzzleContainer(xAxis, yAxis) {
 		}
 	};
 
-	let shuffle = () => {
-		let newPuzzle = shufflePuzzle();
-		localStorage.setItem('puzzleState', JSON.stringify(newPuzzle));
-		renderPuzzle(newPuzzle);
-	};
-
 	function initialize() {
-		if (matrixVolume > 8) {
+		//Requested size is bigger than our current size
+		if (matrixVolume > document.getElementsByTagName('li').length + 1) {
 			for (var i = 0; i < matrixVolume - 9; i++) {
 				var ul = document.getElementsByClassName('puzzle')[0];
 				var li = document.createElement('li');
 				li.appendChild(document.createTextNode((8 + i).toString()));
+				ul.appendChild(li);
+			}
+		} else if (matrixVolume < document.getElementsByTagName('li').length + 1) {
+			let list = document.querySelector('ul');
+			list.innerHTML = '';
+			for (var i = 1; i < matrixVolume; i++) {
+				var ul = document.getElementsByClassName('puzzle')[0];
+				var li = document.createElement('li');
+				li.appendChild(document.createTextNode(i.toString()));
 				ul.appendChild(li);
 			}
 		}
@@ -162,7 +169,6 @@ function puzzleContainer(xAxis, yAxis) {
 	}
 
 	return {
-		shuffle,
 		initialize,
 	};
 }
